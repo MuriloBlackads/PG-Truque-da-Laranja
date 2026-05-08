@@ -1,0 +1,932 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Truque da Laranja — Protocolo Exclusivo</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #ffffff;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .site-header {
+      background: #fff;
+      border-bottom: 1px solid #f0f0f0;
+      padding: 12px 20px;
+      text-align: center;
+    }
+    .site-logo { max-width: 72px; height: auto; display: block; margin: 0 auto; }
+
+    /* PHASES */
+    .phase { display: none; }
+    .phase.active { display: block; }
+
+    /* ── PHASE 1 — VSL INICIAL ── */
+    .vsl-wrap {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 30px 20px 40px;
+      text-align: center;
+    }
+    .vsl-headline {
+      font-size: 26px;
+      font-weight: 900;
+      color: #1a1a1a;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
+    .vsl-headline .orange { color: #FF6B00; }
+    .vsl-sub {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 26px;
+    }
+    .video-box { margin-bottom: 34px; }
+
+    /* RESPONDER button */
+    #btn-responder {
+      display: none;
+      background: #22c55e;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 900;
+      border: none;
+      border-radius: 14px;
+      padding: 20px 40px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto 40px;
+      animation: pulseBtn 1.8s ease-in-out infinite;
+    }
+    @keyframes pulseBtn {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(34,197,94,0.45); }
+      50%       { transform: scale(1.04); box-shadow: 0 0 0 14px rgba(34,197,94,0); }
+    }
+
+    /* FOOTER */
+    .site-footer {
+      background: #f9f9f9;
+      border-top: 1px solid #ebebeb;
+      padding: 20px;
+      text-align: center;
+      font-size: 11px;
+      color: #999;
+      line-height: 1.7;
+    }
+    .site-footer strong { color: #777; }
+
+    /* ── PHASE 2 — QUIZ ── */
+    .quiz-header {
+      background: #fff;
+      border-bottom: 1px solid #f0f0f0;
+      padding: 10px 20px;
+    }
+    .progress-bar-bg {
+      max-width: 520px;
+      margin: 0 auto;
+      height: 6px;
+      background: #ececec;
+      border-radius: 100px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #FF6B00, #FFAA00);
+      border-radius: 100px;
+      width: 0%;
+      transition: width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .quiz-container {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 28px 20px 60px;
+    }
+
+    .vsl-step { display: none; animation: fadeUp 0.35s ease; }
+    .vsl-step.active { display: block; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-tag {
+      display: inline-block;
+      background: #fff3e8;
+      color: #FF6B00;
+      font-size: 13px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-radius: 20px;
+      padding: 5px 14px;
+      margin-bottom: 18px;
+    }
+    .step-title {
+      font-size: 26px;
+      font-weight: 900;
+      line-height: 1.3;
+      color: #1a1a1a;
+      margin-bottom: 14px;
+    }
+    .step-title .orange { color: #FF6B00; }
+    .step-body {
+      font-size: 17px;
+      color: #444;
+      line-height: 1.65;
+      margin-bottom: 20px;
+    }
+    .step-body strong { color: #1a1a1a; }
+    .question {
+      font-size: 19px;
+      font-weight: 800;
+      color: #1a1a1a;
+      margin-bottom: 16px;
+      line-height: 1.4;
+    }
+    .multi-hint { font-size: 13px; color: #888; margin-bottom: 14px; }
+
+    /* Options */
+    .options { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+    .opt {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #fff;
+      border: 2px solid #e0e0e0;
+      border-radius: 14px;
+      padding: 18px 20px;
+      font-size: 17px;
+      font-weight: 600;
+      color: #1a1a1a;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.22s;
+      width: 100%;
+      line-height: 1.4;
+    }
+    .opt:hover { border-color: #FF6B00; background: #fff8f0; transform: translateY(-2px); box-shadow: 0 5px 18px rgba(255,107,0,0.12); }
+    .opt-emoji { font-size: 24px; flex-shrink: 0; }
+    .opt.selected { border-color: #FF6B00; background: #fff3e8; color: #FF6B00; }
+    .opt.selected .opt-check { opacity: 1; }
+    .opt-check { margin-left: auto; flex-shrink: 0; font-size: 18px; opacity: 0; transition: opacity 0.15s; color: #FF6B00; }
+
+    .next-btn, .multi-continue {
+      width: 100%;
+      padding: 20px;
+      background: linear-gradient(135deg, #FF6B00, #FFAA00);
+      color: #fff;
+      font-size: 19px;
+      font-weight: 800;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: all 0.22s;
+    }
+    .next-btn:hover, .multi-continue:hover { transform: translateY(-2px); box-shadow: 0 7px 26px rgba(255,107,0,0.4); }
+    .multi-continue { display: none; }
+    .multi-continue.visible { display: block; }
+
+    /* BACK BUTTON */
+    .quiz-nav {
+      max-width: 520px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .back-btn {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+    .back-btn:hover { color: #FF6B00; }
+    .back-btn:disabled { color: #e0e0e0; cursor: default; }
+
+    /* PHASE 3 LOADING BAR */
+    .vsl-loader {
+      margin: 22px auto 6px;
+      max-width: 400px;
+      text-align: center;
+      padding: 0 4px;
+    }
+    .vsl-loader-cta {
+      font-size: 14px;
+      color: #555;
+      font-weight: 600;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+    .vsl-loader-phase {
+      font-size: 12px;
+      color: #999;
+      margin-bottom: 10px;
+      font-weight: 500;
+      min-height: 18px;
+      transition: opacity 0.4s;
+    }
+    .vsl-loader-track {
+      background: #ebebeb;
+      border-radius: 100px;
+      height: 7px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .vsl-loader-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #FF6B00, #FFAA00);
+      border-radius: 100px;
+      width: 0%;
+      transition: width 1s linear;
+    }
+    .vsl-loader-time-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .vsl-loader-time-label {
+      font-size: 11px;
+      color: #ccc;
+    }
+    .vsl-loader-time {
+      font-size: 11px;
+      color: #bbb;
+      letter-spacing: 0.4px;
+      font-variant-numeric: tabular-nums;
+    }
+    .vsl-complete {
+      display: none;
+      font-size: 14px;
+      color: #15803d;
+      font-weight: 600;
+      line-height: 1.55;
+      padding: 13px 18px;
+      background: #f0fdf4;
+      border-radius: 10px;
+      border: 1px solid #bbf7d0;
+    }
+
+    /* Age grid */
+    .age-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+    .age-card {
+      background: #fff;
+      border: 2px solid #e0e0e0;
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .age-card:hover { border-color: #FF6B00; background: #fff8f0; transform: translateY(-2px); box-shadow: 0 5px 18px rgba(255,107,0,0.12); }
+    .age-card img { width: 100%; border-radius: 8px; margin-bottom: 10px; display: block; }
+    .age-card-label { font-size: 15px; font-weight: 700; color: #1a1a1a; }
+
+    /* Slider */
+    .slider-display { text-align: center; margin-bottom: 10px; }
+    .slider-value { font-size: 52px; font-weight: 900; color: #FF6B00; }
+    .slider-unit { font-size: 22px; color: #888; margin-left: 6px; }
+    .slider-wrapper { margin-bottom: 12px; }
+    .ruler-slider {
+      -webkit-appearance: none;
+      width: 100%; height: 6px;
+      border-radius: 3px; background: #e0e0e0;
+      outline: none; margin-bottom: 8px;
+    }
+    .ruler-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 28px; height: 28px;
+      border-radius: 50%; background: #FF6B00; cursor: pointer;
+    }
+    .slider-range-labels { display: flex; justify-content: space-between; font-size: 12px; color: #aaa; }
+
+    /* Info box */
+    .info-box {
+      background: #fff8f0;
+      border-left: 5px solid #FF6B00;
+      border-radius: 0 14px 14px 0;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      font-size: 16px;
+      line-height: 1.65;
+      color: #333;
+    }
+    .info-box strong { color: #FF6B00; }
+
+    /* Testimonial */
+    .tcard { background: #fff; border: 1px solid #eee; border-radius: 14px; padding: 18px; }
+    .tcard-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .tname { font-size: 13px; font-weight: 700; color: #1a1a1a; }
+    .tstars { color: #FF6B00; font-size: 14px; }
+    .ttext { font-size: 14px; color: #555; line-height: 1.6; font-style: italic; }
+
+    .aviso-card {
+      background: #fffaf5;
+      border: 1px solid #ffe0c0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 13px; color: #666; line-height: 1.6;
+    }
+    .aviso-icon { font-size: 20px; flex-shrink: 0; }
+
+    /* ── PHASE 3 — VSL FINAL ── */
+    .final-wrap {
+      max-width: 540px;
+      margin: 0 auto;
+      padding: 36px 20px 60px;
+      text-align: center;
+    }
+    .final-headline {
+      font-size: 26px;
+      font-weight: 900;
+      color: #1a1a1a;
+      margin-bottom: 10px;
+      line-height: 1.3;
+    }
+    .final-headline .orange { color: #FF6B00; }
+    .final-sub {
+      font-size: 16px;
+      color: #555;
+      margin-bottom: 24px;
+    }
+
+    /* COMPRAR button */
+    #btn-comprar {
+      display: none;
+      background: #22c55e;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 900;
+      border: none;
+      border-radius: 14px;
+      padding: 22px 40px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      width: 100%;
+      max-width: 440px;
+      margin: 32px auto 0;
+      text-decoration: none;
+      animation: pulseBtn 1.8s ease-in-out infinite;
+    }
+    #btn-comprar.show { display: block; }
+
+    wistia-player { clip-path: inset(0 0 44px 0); }
+
+    @media (max-width: 480px) {
+      .vsl-headline, .step-title, .final-headline { font-size: 21px; }
+      .opt { font-size: 15px; padding: 15px 16px; }
+      .slider-value { font-size: 44px; }
+    }
+  </style>
+<script src="https://fast.wistia.com/player.js" async></script>
+<script src="https://fast.wistia.com/embed/11nxeku2r8.js" async type="module"></script>
+<script src="https://fast.wistia.com/embed/gf1088v4jd.js" async type="module"></script>
+<style>wistia-player[media-id='11nxeku2r8']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/11nxeku2r8/swatch'); display: block; filter: blur(5px); padding-top:178.06%; }
+wistia-player[media-id='gf1088v4jd']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/gf1088v4jd/swatch'); display: block; filter: blur(5px); padding-top:178.06%; }</style>
+</head>
+<body>
+
+<header class="site-header">
+  <img src="images/LOGO.png" alt="Truque da Laranja" class="site-logo">
+</header>
+
+<!-- ══════════════════════════════════════
+     FASE 1 — VSL INICIAL
+══════════════════════════════════════ -->
+<div class="phase active" id="phase-1">
+  <div class="vsl-wrap">
+    <h1 class="vsl-headline">Descubra em 2 minutos como preparar o <span class="orange">Truque da Laranja!</span></h1>
+    <p class="vsl-sub">Assista ao vídeo abaixo e receba o protocolo do Truque da Laranja diretamente no seu WhatsApp</p>
+
+    <div class="video-box">
+      <wistia-player media-id="11nxeku2r8" aspect="0.5616224648985959" playbar="false" autoplay="true" volume-control="false" settings-control="false" captions-button="false" fullscreen-button="false" wistia-logo="false" chapters-button="false" controls-visible-on-load="false" style="display:block;margin:0 auto;width:100%;max-width:400px;"></wistia-player>
+    </div>
+
+    <button id="btn-responder" onclick="startQuiz()">▶ RESPONDER</button>
+  </div>
+
+  <footer class="site-footer">
+    <strong>© 2026 Truque da Laranja — Todos os direitos reservados.</strong><br>
+    Este site e seu conteúdo são de inteira responsabilidade do produtor independente e não representam,
+    de nenhuma forma, qualquer posição oficial do Facebook Inc. (Meta Platforms, Inc.).
+    Esta página não é patrocinada, endossada, administrada ou associada ao Facebook.
+    O Facebook é uma marca registrada de Meta Platforms, Inc.
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════
+     FASE 2 — QUIZ
+══════════════════════════════════════ -->
+<div class="phase" id="phase-2">
+  <div class="quiz-header">
+    <div class="quiz-nav">
+      <button class="back-btn" id="vslBackBtn" onclick="vslBack()" disabled="">←</button>
+      <div class="progress-bar-bg" style="flex:1">
+        <div class="progress-bar-fill" id="vslProgressFill"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="quiz-container">
+
+    <!-- ETAPA 1 — FAIXA ETÁRIA -->
+    <div class="vsl-step active" id="vsl-step-1">
+      <div class="step-tag">📋 Montando Seu Protocolo</div>
+      <h2 class="step-title">Qual é a sua <span class="orange">faixa etária</span>?</h2>
+      <div class="age-grid">
+        <div class="age-card" onclick="vslNext()"><img src="images/abaixodos40.webp" alt="Abaixo dos 40"><div class="age-card-label">Abaixo dos 40</div></div>
+        <div class="age-card" onclick="vslNext()"><img src="images/40.webp" alt="De 40 a 50"><div class="age-card-label">De 40 a 50</div></div>
+        <div class="age-card" onclick="vslNext()"><img src="images/50.webp" alt="De 51 a 60"><div class="age-card-label">De 51 a 60</div></div>
+        <div class="age-card" onclick="vslNext()"><img src="images/60.webp" alt="Acima dos 60"><div class="age-card-label">Acima dos 60</div></div>
+      </div>
+    </div>
+
+    <!-- ETAPA 2 — MÉTODOS -->
+    <div class="vsl-step" id="vsl-step-2">
+      <div class="step-tag">🔎 Diagnóstico</div>
+      <h2 class="step-title">Quais métodos você já utilizou para tratar a <span class="orange">Disfunção Erétil</span>?</h2>
+      <p class="multi-hint">☑️ Você pode marcar mais de uma opção</p>
+      <div class="options" id="vopts-2">
+        <button class="opt" onclick="vslToggle(this,'vopts-2',false)"><span class="opt-emoji">💊</span> Viagra ou outros remédios<span class="opt-check">✓</span></button>
+        <button class="opt" onclick="vslToggle(this,'vopts-2',false)"><span class="opt-emoji">🌿</span> Produtos naturais ou suplementos<span class="opt-check">✓</span></button>
+        <button class="opt" onclick="vslToggle(this,'vopts-2',false)"><span class="opt-emoji">🏋️</span> Exercícios físicos e dieta<span class="opt-check">✓</span></button>
+        <button class="opt" data-exclusive="" onclick="vslToggle(this,'vopts-2',true)"><span class="opt-emoji">😔</span> Nenhum — não sabia o que fazer<span class="opt-check">✓</span></button>
+      </div>
+      <button class="multi-continue" id="vcontinue-2" onclick="vslNext()">Continuar →</button>
+    </div>
+
+    <!-- ETAPA 3 — PESO -->
+    <div class="vsl-step" id="vsl-step-3">
+      <div class="step-tag">📋 Montando Seu Protocolo</div>
+      <h2 class="step-title">Qual é o seu <span class="orange">peso</span>?</h2>
+      <div class="slider-display"><span class="slider-value" id="vPesoVal">80</span><span class="slider-unit">kg</span></div>
+      <div class="slider-wrapper">
+        <input type="range" class="ruler-slider" id="vPesoSlider" min="50" max="150" value="80" oninput="document.getElementById('vPesoVal').textContent=this.value">
+        <div class="slider-range-labels"><span>50 kg</span><span>150 kg</span></div>
+      </div>
+      <p style="text-align:center;font-size:14px;color:#bbb;margin-top:-16px;margin-bottom:20px;">👆 Arraste a barra para selecionar seu peso exato</p>
+      <button class="next-btn" onclick="vslNext()">Continuar →</button>
+    </div>
+
+    <!-- ETAPA 4 — ALTURA -->
+    <div class="vsl-step" id="vsl-step-4">
+      <div class="step-tag">📋 Montando Seu Protocolo</div>
+      <h2 class="step-title">Qual é a sua <span class="orange">altura</span>?</h2>
+      <div class="slider-display"><span class="slider-value" id="vAlturaVal">170</span><span class="slider-unit">cm</span></div>
+      <div class="slider-wrapper">
+        <input type="range" class="ruler-slider" id="vAlturaSlider" min="150" max="210" value="170" oninput="document.getElementById('vAlturaVal').textContent=this.value">
+        <div class="slider-range-labels"><span>150 cm</span><span>210 cm</span></div>
+      </div>
+      <p style="text-align:center;font-size:14px;color:#bbb;margin-top:-16px;margin-bottom:20px;">👆 Arraste a barra para selecionar sua altura exata</p>
+      <button class="next-btn" onclick="vslNext()">Continuar →</button>
+    </div>
+
+    <!-- ETAPA 5 — HÁ QUANTO TEMPO -->
+    <div class="vsl-step" id="vsl-step-5">
+      <div class="step-tag">📋 Montando Seu Protocolo</div>
+      <h2 class="step-title">Há quanto tempo você enfrenta <span class="orange">dificuldades em ter uma ereção</span>?</h2>
+      <div class="options">
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">😟</span> Menos de 6 meses</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">😠</span> Entre 6 meses e 1 ano</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">😔</span> Entre 1 e 3 anos</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">⏳</span> Mais de 3 anos</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 6 — CREDIBILIDADE -->
+    <div class="vsl-step" id="vsl-step-6">
+      <div class="step-tag">📊 Resultados Reais</div>
+      <h2 class="step-title"><span class="orange">12.548 homens</span> acima dos 40 já transformaram sua vida sexual com o protocolo do Truque da Laranja.</h2>
+      <p class="step-body"><strong>92% dos participantes</strong> relataram ereções fortes e duradouras nos primeiros 7 dias de tratamento, sem recorrer a remédios.</p>
+      <div class="tcard" style="margin-bottom:14px;">
+        <div class="tcard-header">
+          <img src="images/roberto.png" alt="Roberto" style="width:52px;height:52px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #FF6B00;">
+          <div><div class="tname">Roberto M., 54 anos — Curitiba/PR</div><div class="tstars">★★★★★</div></div>
+        </div>
+        <p class="ttext">"Achei que era coisa da idade e num tinha mais jeito. Depois de 5 dias seguindo o protocolo minha ereção voltou a ser firme igual quando eu tinha 15 anos. Senti que meu pau aumentou uns 3cm de tamanho e ficou mais grosso. Obrigado"</p>
+      </div>
+      <div class="tcard" style="margin-bottom:22px;">
+        <div class="tcard-header">
+          <img src="images/Marcelo.png" alt="Marcelo" style="width:52px;height:52px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid #FF6B00;">
+          <div><div class="tname">Marcelo F., 47 anos — São Paulo/SP</div><div class="tstars">★★★★★</div></div>
+        </div>
+        <p class="ttext">"Joguei o tadala fora agora so tomo essa bebida todo dia e fico com o negocio duro toda hora"</p>
+      </div>
+      <p class="question">Em qual dessas situações você se encontra hoje?</p>
+      <div class="options">
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">💊</span> Dependo de remédios para ter uma ereção de respeito</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">😕</span> Consigo ereção, mas meia-bomba</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">🎲</span> É imprevisível, às vezes consigo, às vezes não</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">💪</span> Tenho ereção forte sempre que desejo</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 7 — SAÚDE -->
+    <div class="vsl-step" id="vsl-step-7">
+      <div class="step-tag">🏥 Histórico de Saúde</div>
+      <h2 class="step-title">Você tem alguma dessas <span class="orange">condições de saúde</span>?</h2>
+      <p class="step-body">Essas condições afetam a circulação e precisam ser consideradas no seu protocolo para garantir segurança e eficácia.</p>
+      <p class="multi-hint">☑️ Você pode marcar mais de uma opção</p>
+      <div class="options" id="vopts-7">
+        <button class="opt" onclick="vslToggle(this,'vopts-7',false)"><span class="opt-emoji">🩸</span> Tenho pressão alta (hipertensão)<span class="opt-check">✓</span></button>
+        <button class="opt" onclick="vslToggle(this,'vopts-7',false)"><span class="opt-emoji">🍭</span> Tenho diabetes ou pré-diabetes<span class="opt-check">✓</span></button>
+        <button class="opt" onclick="vslToggle(this,'vopts-7',false)"><span class="opt-emoji">❤️</span> Já tive problemas cardiovasculares<span class="opt-check">✓</span></button>
+        <button class="opt" data-exclusive="" onclick="vslToggle(this,'vopts-7',true)"><span class="opt-emoji">✅</span> Nenhuma das opções acima<span class="opt-check">✓</span></button>
+      </div>
+      <button class="multi-continue" id="vcontinue-7" onclick="vslNext()">Continuar →</button>
+    </div>
+
+    <!-- ETAPA 8 — VÍCIOS -->
+    <div class="vsl-step" id="vsl-step-8">
+      <div class="step-tag">🚬 Hábitos do Dia a Dia</div>
+      <h2 class="step-title">Você pratica algum desses <span class="orange">hábitos com frequência</span>?</h2>
+      <p class="step-body">Sem julgamento — são informações importantes para calibrar o protocolo corretamente.</p>
+      <p class="multi-hint">☑️ Você pode marcar mais de uma opção</p>
+      <div class="options" id="vopts-8">
+        <button class="opt" onclick="vslToggle(this,'vopts-8',false)"><span class="opt-emoji">🚬</span> Fumo cigarros regularmente<span class="opt-check">✓</span></button>
+        <button class="opt" onclick="vslToggle(this,'vopts-8',false)"><span class="opt-emoji">🍺</span> Consumo álcool com frequência<span class="opt-check">✓</span></button>
+        <button class="opt" onclick="vslToggle(this,'vopts-8',false)"><span class="opt-emoji">📱</span> Consumo pornografia com frequência<span class="opt-check">✓</span></button>
+        <button class="opt" onclick="vslToggle(this,'vopts-8',false)"><span class="opt-emoji">🌿</span> Uso maconha regularmente<span class="opt-check">✓</span></button>
+        <button class="opt" data-exclusive="" onclick="vslToggle(this,'vopts-8',true)"><span class="opt-emoji">✅</span> Não tenho nenhum desses hábitos<span class="opt-check">✓</span></button>
+      </div>
+      <button class="multi-continue" id="vcontinue-8" onclick="vslNext()">Continuar →</button>
+    </div>
+
+    <!-- ETAPA 9 — AUMENTO -->
+    <div class="vsl-step" id="vsl-step-9">
+      <div class="step-tag">📐 Personalização Avançada</div>
+      <h2 class="step-title">Quantos cm você quer <span class="orange">aumentar no seu pênis</span>?</h2>
+      <div class="options">
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">🙅</span> Não quero aumentar</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">📏</span> 1 a 3 cm</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">📏</span> 3 a 4 cm</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">📏</span> 4 a 5 cm</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">🚀</span> +5 cm</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 10 — EJACULAÇÃO -->
+    <div class="vsl-step" id="vsl-step-10">
+      <div class="step-tag">⏱️ Desempenho Sexual</div>
+      <h2 class="step-title">Quanto tempo você consegue <span class="orange">durar durante a relação</span>?</h2>
+      <p class="step-body">O protocolo também atua no controle da ejaculação. Precisamos saber sua situação atual nesse ponto.</p>
+      <div class="options">
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">⚡</span> Menos de 2 minutos</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">⏰</span> Entre 2 e 5 minutos</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">🕐</span> Entre 5 e 15 minutos</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">💪</span> Mais de 15 minutos</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 11 — LIBIDO -->
+    <div class="vsl-step" id="vsl-step-11">
+      <div class="step-tag">🔥 Nível de Libido</div>
+      <h2 class="step-title">Como está o seu <span class="orange">desejo sexual</span> atualmente?</h2>
+      <p class="step-body">A libido está ligada diretamente à testosterona. Essa informação torna a calibração do protocolo ainda mais precisa.</p>
+      <div class="options">
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">❄️</span> Praticamente zero — não tenho vontade</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">😕</span> Baixo — às vezes surge, mas é raro</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">🙂</span> Razoável — tenho vontade mas a ereção falha</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">🔥</span> Alto — o desejo existe, mas o corpo não acompanha</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 12 — DOR 1 -->
+    <div class="vsl-step" id="vsl-step-12">
+      <h2 class="step-title">Quando sua parceira quer se aproximar de você...</h2>
+      <div class="options">
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">😶</span> Finjo que estou cansado para evitar o momento</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">💔</span> Ela já me perguntou o que está havendo — e eu não soube o que dizer</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">😔</span> A frequência foi caindo até quase zero — e ela sente isso</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">😞</span> Nos afastamos aos poucos e nem conversamos mais sobre isso</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 13 — DOR 2 -->
+    <div class="vsl-step" id="vsl-step-13">
+      <h2 class="step-title">Quando a ereção falha no momento H...</h2>
+      <div class="options">
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">😳</span> Sinto uma vergonha que não passa — como se não fosse homem o suficiente</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">😠</span> Fico irritado comigo mesmo e me afasto emocionalmente</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">😶</span> Fico dias com aquele peso no peito, pensando no que aconteceu</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">🧊</span> Me sinto um estranho no meu próprio corpo — não me reconheço mais</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 14 — DOR 3 -->
+    <div class="vsl-step" id="vsl-step-14">
+      <h2 class="step-title">No fundo, o que mais te <span class="orange">preocupa</span> com tudo isso?</h2>
+      <div class="options">
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">😰</span> Perder minha parceira para alguém que consiga satisfazê-la</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">😟</span> Envelhecer sem nunca mais ter uma vida sexual de verdade</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">💔</span> Ela se cansar de esperar e ir embora sem eu conseguir fazer nada</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">😔</span> Que isso piore cada vez mais e não tenha mais volta</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 15 — SIM 1 -->
+    <div class="vsl-step" id="vsl-step-15">
+      <div class="step-tag">✅ Protocolo Pronto!</div>
+      <h2 class="step-title">Um resumo rápido:</h2>
+      <div class="info-box">
+        🍊 O Truque da Laranja reacende a produção do <strong>óxido nítrico</strong> — a substância que abre as veias e manda sangue para o pênis. A mistura certa, nas dosagens exatas, vai trazer de volta as ereções fortes e duradouras que você sempre teve!
+      </div>
+      <p class="question">Você entendeu por que o Truque da Laranja é tão eficaz para acabar com a Disfunção Erétil?</p>
+      <div class="options">
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">✅</span> Sim, entendi que esse protocolo produz o Óxido Nítrico que leva alto fluxo sanguíneo para meu pênis!</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">🚀</span> Com certeza, quero acessar meu protocolo agora!</button>
+      </div>
+    </div>
+
+    <!-- ETAPA 16 — SIM 2 -->
+    <div class="vsl-step" id="vsl-step-16">
+      <div class="step-tag">🎯 Protocolo Exclusivo</div>
+      <div class="info-box">
+        ⚠️ <strong>Atenção:</strong> Ao contrário dos métodos de farmácia, o Truque da Laranja é um protocolo <strong>100% natural</strong> e preparado especificamente para <strong>VOCÊ!</strong>
+      </div>
+      <p class="question">Você se compromete a seguir o Protocolo por 7 dias e ver seu pau ficar duro de forma totalmente natural novamente?</p>
+      <div class="options">
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">✅</span> Sim, eu me comprometo!</button>
+        <button class="opt" onclick="vslNext()"><span class="opt-emoji">💪</span> Com certeza, é tudo o que eu preciso!</button>
+      </div>
+      <div class="aviso-card" style="margin-top:18px;">
+        <span class="aviso-icon">⚠️</span>
+        <p><strong>IMPORTANTE:</strong> o número de protocolos preparados é limitado, então iremos fornecer apenas para homens realmente comprometidos com sua saúde sexual.</p>
+      </div>
+    </div>
+
+    <!-- ETAPA 17 — SIM 3 (ÚLTIMA) -->
+    <div class="vsl-step" id="vsl-step-17">
+      <div class="step-tag">🏁 Confirmação Final</div>
+      <p class="question">Você está pronto para começar o seu protocolo ainda hoje?</p>
+      <div class="options">
+        <button class="opt" onclick="goToFinalVSL()"><span class="opt-emoji">🔥</span> Sim! Vou começar ainda hoje!</button>
+        <button class="opt" onclick="goToFinalVSL()"><span class="opt-emoji">✅</span> Com certeza, já era hora de resolver isso de vez!</button>
+      </div>
+      <div class="info-box" style="margin-top:16px">⚡ Seu corpo já tem tudo que precisa. O Truque da Laranja apenas <strong>reativa o que estava adormecido</strong>.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     FASE 3 — VSL FINAL
+══════════════════════════════════════ -->
+<div class="phase" id="phase-3">
+  <div class="final-wrap">
+    <h2 class="final-headline" id="finalHeadline">Não saia agora! Seu Truque da Laranja <span class="orange">está quase pronto!</span></h2>
+    <p class="final-sub">Assista ao vídeo abaixo para receber:</p>
+
+    <div id="final-vsl-player"></div>
+
+    <div class="vsl-loader" id="vslLoader">
+      <p class="vsl-loader-cta">⬆️ Assista ao vídeo acima enquanto preparamos o seu protocolo personalizado do Truque da Laranja</p>
+      <p class="vsl-loader-phase" id="vslPhase">Lendo suas respostas...</p>
+      <div class="vsl-loader-track">
+        <div class="vsl-loader-fill" id="vslLoaderFill"></div>
+      </div>
+      <div class="vsl-loader-time-row" id="vslLoaderTimeRow">
+        <span class="vsl-loader-time-label">Você vai receber seu protocolo em:</span>
+        <span class="vsl-loader-time" id="vslLoaderTime">2:00</span>
+      </div>
+      <div class="vsl-complete" id="vslComplete">
+        🎉 Parabéns, seu protocolo está pronto. Termine de assistir ao vídeo para receber.
+      </div>
+    </div>
+
+    <a id="btn-comprar" href="https://pay.wiapy.com/693264796decbabe8d8e52d0?affiliate=698d1f8b1eee28f34eb05bea" target="_blank" rel="noopener" onclick="vslTrack(119)">
+      🛒 COMPRAR AGORA
+    </a>
+  </div>
+
+  <footer class="site-footer">
+    <strong>© 2026 Truque da Laranja — Todos os direitos reservados.</strong><br>
+    Este site e seu conteúdo são de inteira responsabilidade do produtor independente e não representam,
+    de nenhuma forma, qualquer posição oficial do Facebook Inc. (Meta Platforms, Inc.).
+    Esta página não é patrocinada, endossada, administrada ou associada ao Facebook.
+    O Facebook é uma marca registrada de Meta Platforms, Inc.
+  </footer>
+</div>
+
+<script>
+  // ── TRACKING ──
+  var VSL_URL = 'https://gbyfrcwyiducpxgcrqsu.supabase.co';
+  var VSL_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdieWZyY3d5aWR1Y3B4Z2NycXN1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU5MDgzMTgsImV4cCI6MjA5MTQ4NDMxOH0.9nVmWVO7Cw0Kwj9XlnhDbeTDoJJoiVwl33W6OnJhNYU';
+  var vslSession = (function() {
+    var k = 'vsl_sid';
+    var v = localStorage.getItem(k);
+    if (!v) { v = 'vsl_' + Math.random().toString(36).substr(2, 9); localStorage.setItem(k, v); }
+    return v;
+  })();
+
+  function vslTrack(step) {
+    var h = { 'Content-Type': 'application/json', 'apikey': VSL_KEY, 'Authorization': 'Bearer ' + VSL_KEY };
+    fetch(VSL_URL + '/rest/v1/sessions?on_conflict=session_id', {
+      method: 'POST',
+      headers: Object.assign({}, h, { 'Prefer': 'resolution=merge-duplicates,return=minimal' }),
+      body: JSON.stringify({ session_id: vslSession, last_step: step, last_seen_at: new Date().toISOString(), completed: step === 118, user_agent: navigator.userAgent.substr(0, 200), referrer: document.referrer.substr(0, 200) })
+    }).catch(function(){});
+    fetch(VSL_URL + '/rest/v1/step_events', {
+      method: 'POST',
+      headers: Object.assign({}, h, { 'Prefer': 'return=minimal' }),
+      body: JSON.stringify({ session_id: vslSession, step: step })
+    }).catch(function(){});
+  }
+
+  // Track VSL1 arrival on page load
+  vslTrack(100);
+
+  function mountFinalVSL() {
+    var wrap = document.getElementById('final-vsl-player');
+    if (!wrap) return;
+    wrap.innerHTML = '<wistia-player id="final-wistia" media-id="gf1088v4jd" aspect="0.5616224648985959" playbar="false" autoplay="true" volume-control="false" settings-control="false" captions-button="false" fullscreen-button="false" wistia-logo="false" chapters-button="false" controls-visible-on-load="false" style="display:block;margin:0 auto;width:100%;max-width:400px;"></wistia-player>';
+  }
+
+  var VSL_PROGRESS = [0, 10, 20, 29, 37, 44, 50, 55, 60, 64, 68, 72, 76, 80, 84, 89, 93, 97];
+  var vslCurrentStep = 1;
+
+  // Botão RESPONDER aparece no minuto 1:58 do vídeo (118s)
+  var responderShown = false;
+  function showResponder() {
+    if (responderShown) return;
+    responderShown = true;
+    var btn = document.getElementById('btn-responder');
+    btn.style.display = 'block';
+    setTimeout(function() { btn.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
+  }
+
+  // Wistia API — botão RESPONDER aparece aos 118s do vídeo
+  window._wq = window._wq || [];
+  _wq.push({
+    id: '11nxeku2r8',
+    options: {
+      controlsVisibleOnLoad: false,
+      wistiaLogo: false,
+      captionsButton: false,
+      chaptersButton: false,
+      qualityControl: false
+    },
+    onReady: function(video) {
+      video.bind('timechange', function(t) {
+        if (t >= 118) showResponder();
+      });
+    }
+  });
+
+
+  // Fallback garantido — aparece em 128s desde o carregamento da página
+  setTimeout(showResponder, 128000);
+
+  function startQuiz() {
+    document.getElementById('phase-1').classList.remove('active');
+    document.getElementById('phase-2').classList.add('active');
+    window.scrollTo(0, 0);
+    updateVSLProgress();
+    vslTrack(101); // step 1 do quiz
+  }
+
+  function updateVSLProgress() {
+    document.getElementById('vslProgressFill').style.width = (VSL_PROGRESS[vslCurrentStep] || 0) + '%';
+    document.getElementById('vslBackBtn').disabled = (vslCurrentStep <= 1);
+  }
+
+  function vslNext() {
+    document.getElementById('vsl-step-' + vslCurrentStep).classList.remove('active');
+    vslCurrentStep++;
+    var next = document.getElementById('vsl-step-' + vslCurrentStep);
+    if (next) {
+      next.classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      updateVSLProgress();
+      vslTrack(100 + vslCurrentStep); // steps 102–117
+    }
+  }
+
+  function vslBack() {
+    if (vslCurrentStep <= 1) return;
+    document.getElementById('vsl-step-' + vslCurrentStep).classList.remove('active');
+    vslCurrentStep--;
+    document.getElementById('vsl-step-' + vslCurrentStep).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    updateVSLProgress();
+  }
+
+  function vslToggle(btn, groupId, isExclusive) {
+    var group = document.getElementById(groupId);
+    var stepNum = groupId.replace('vopts-', '');
+    var continueBtn = document.getElementById('vcontinue-' + stepNum);
+    if (isExclusive) {
+      group.querySelectorAll('.opt').forEach(function(b) { b.classList.remove('selected'); });
+      btn.classList.add('selected');
+    } else {
+      group.querySelectorAll('[data-exclusive]').forEach(function(b) { b.classList.remove('selected'); });
+      btn.classList.toggle('selected');
+    }
+    if (continueBtn) continueBtn.classList.toggle('visible', group.querySelectorAll('.opt.selected').length > 0);
+  }
+
+  function startVSLLoader() {
+    // Real duration: 183s (3:03). Fake countdown: starts at 2:00, slows down progressively.
+    var REAL_TOTAL = 183;
+    var phases = [
+      'Lendo suas respostas...',
+      'Identificando padrão metabólico...',
+      'Calculando deficiência de óxido nítrico...',
+      'Cruzando dados com base clínica...',
+      'Mapeando histórico de saúde...',
+      'Analisando resposta vascular...',
+      'Selecionando ativos naturais...',
+      'Ajustando dosagem para seu peso...',
+      'Calibrando fórmula para sua faixa etária...',
+      'Verificando interações com seus hábitos...',
+      'Determinando protocolo de aplicação...',
+      'Refinando concentrações dos ativos...',
+      'Validando segurança do protocolo...',
+      'Compilando receita personalizada...',
+      'Finalizando protocolo exclusivo...'
+    ];
+    var elapsed = 0;
+    var fill    = document.getElementById('vslLoaderFill');
+    var phaseEl = document.getElementById('vslPhase');
+    var timeEl  = document.getElementById('vslLoaderTime');
+
+    var interval = setInterval(function() {
+      elapsed++;
+      var pct = Math.min((elapsed / REAL_TOTAL) * 100, 100);
+      fill.style.width = pct + '%';
+
+      // Fake countdown: 120s → 0, fast at start, slow at end (power curve)
+      var fakeSeconds = Math.max(0, Math.round(120 * Math.pow(1 - elapsed / REAL_TOTAL, 1.5)));
+      var fm = Math.floor(fakeSeconds / 60);
+      var fs = fakeSeconds % 60;
+      timeEl.textContent = fm + ':' + (fs < 10 ? '0' : '') + fs;
+
+      // Cycle through phases based on progress
+      var phaseIdx = Math.min(Math.floor((elapsed / REAL_TOTAL) * phases.length), phases.length - 1);
+      phaseEl.textContent = phases[phaseIdx];
+
+      if (elapsed >= REAL_TOTAL) {
+        clearInterval(interval);
+        // Troca headline, oculta fases/timer, exibe mensagem de conclusão
+        document.getElementById('finalHeadline').innerHTML = 'Seu Protocolo do Truque da Laranja <span class="orange">está pronto!</span>';
+        phaseEl.style.display = 'none';
+        document.getElementById('vslLoaderTimeRow').style.display = 'none';
+        document.getElementById('vslComplete').style.display = 'block';
+      }
+    }, 1000);
+  }
+
+  function goToFinalVSL() {
+    document.getElementById('phase-2').classList.remove('active');
+    document.getElementById('phase-3').classList.add('active');
+    window.scrollTo(0, 0);
+    mountFinalVSL();
+    vslTrack(118);
+    startVSLLoader();
+
+    // Botão COMPRAR aparece no minuto 6:40 do vídeo (400s)
+    var comprarShown = false;
+    function showComprar() {
+      if (comprarShown) return;
+      comprarShown = true;
+      document.getElementById('vslComplete').style.display = 'none';
+      document.getElementById('vslLoader').style.display   = 'none';
+      var btn = document.getElementById('btn-comprar');
+      btn.classList.add('show');
+      setTimeout(function() { btn.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 400);
+    }
+
+    // Wistia API — detecta progresso do vídeo final
+    window._wq = window._wq || [];
+    _wq.push({ id: 'gf1088v4jd', onReady: function(video) {
+      video.bind('timechange', function(t) {
+        if (t >= 400) showComprar();
+      });
+    }});
+
+    // Fallback garantido
+    setTimeout(showComprar, 410000);
+  }
+</script>
+
+
+</body></html>
