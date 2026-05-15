@@ -398,10 +398,8 @@
     }
   </style>
 <script src="https://fast.wistia.com/player.js" async></script>
-<script src="https://fast.wistia.com/embed/11nxeku2r8.js" async type="module"></script>
 <script src="https://fast.wistia.com/embed/gf1088v4jd.js" async type="module"></script>
-<style>wistia-player[media-id='11nxeku2r8']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/11nxeku2r8/swatch'); display: block; filter: blur(5px); padding-top:178.06%; }
-wistia-player[media-id='gf1088v4jd']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/gf1088v4jd/swatch'); display: block; filter: blur(5px); padding-top:178.06%; }</style>
+<style>wistia-player[media-id='gf1088v4jd']:not(:defined) { background: center / contain no-repeat url('https://fast.wistia.com/embed/medias/gf1088v4jd/swatch'); display: block; filter: blur(5px); padding-top:178.06%; }</style>
 </head>
 <body>
 
@@ -409,34 +407,12 @@ wistia-player[media-id='gf1088v4jd']:not(:defined) { background: center / contai
   <img src="images/LOGO.png" alt="Truque da Laranja" class="site-logo">
 </header>
 
-<!-- ══════════════════════════════════════
-     FASE 1 — VSL INICIAL
-══════════════════════════════════════ -->
-<div class="phase active" id="phase-1">
-  <div class="vsl-wrap">
-    <h1 class="vsl-headline">Descubra em 2 minutos como preparar o <span class="orange">Truque da Laranja!</span></h1>
-    <p class="vsl-sub">Assista ao vídeo abaixo e receba o protocolo do Truque da Laranja diretamente no seu WhatsApp</p>
 
-    <div class="video-box">
-      <wistia-player media-id="11nxeku2r8" aspect="0.5616224648985959" playbar="false" autoplay="true" volume-control="false" settings-control="false" captions-button="false" fullscreen-button="false" wistia-logo="false" chapters-button="false" controls-visible-on-load="false" style="display:block;margin:0 auto;width:100%;max-width:400px;"></wistia-player>
-    </div>
-
-    <button id="btn-responder" onclick="startQuiz()">▶ RESPONDER</button>
-  </div>
-
-  <footer class="site-footer">
-    <strong>© 2026 Truque da Laranja — Todos os direitos reservados.</strong><br>
-    Este site e seu conteúdo são de inteira responsabilidade do produtor independente e não representam,
-    de nenhuma forma, qualquer posição oficial do Facebook Inc. (Meta Platforms, Inc.).
-    Esta página não é patrocinada, endossada, administrada ou associada ao Facebook.
-    O Facebook é uma marca registrada de Meta Platforms, Inc.
-  </footer>
-</div>
 
 <!-- ══════════════════════════════════════
      FASE 2 — QUIZ
 ══════════════════════════════════════ -->
-<div class="phase" id="phase-2">
+<div class="phase active" id="phase-2">
   <div class="quiz-header">
     <div class="quiz-nav">
       <button class="back-btn" id="vslBackBtn" onclick="vslBack()" disabled="">←</button>
@@ -752,8 +728,8 @@ wistia-player[media-id='gf1088v4jd']:not(:defined) { background: center / contai
     }).catch(function(){});
   }
 
-  // Track VSL1 arrival on page load
-  vslTrack(100);
+  // Track Quiz arrival on page load
+  vslTrack(1);
 
   function mountFinalVSL() {
     var wrap = document.getElementById('final-vsl-player');
@@ -764,37 +740,7 @@ wistia-player[media-id='gf1088v4jd']:not(:defined) { background: center / contai
   var VSL_PROGRESS = [0, 10, 20, 29, 37, 44, 50, 55, 60, 64, 68, 72, 76, 80, 84, 89, 93, 97];
   var vslCurrentStep = 1;
 
-  // Botão RESPONDER aparece no minuto 1:58 do vídeo (118s)
-  var responderShown = false;
-  function showResponder() {
-    if (responderShown) return;
-    responderShown = true;
-    var btn = document.getElementById('btn-responder');
-    btn.style.display = 'block';
-    setTimeout(function() { btn.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 300);
-  }
 
-  // Wistia API — botão RESPONDER aparece aos 118s do vídeo
-  window._wq = window._wq || [];
-  _wq.push({
-    id: '11nxeku2r8',
-    options: {
-      controlsVisibleOnLoad: false,
-      wistiaLogo: false,
-      captionsButton: false,
-      chaptersButton: false,
-      qualityControl: false
-    },
-    onReady: function(video) {
-      video.bind('timechange', function(t) {
-        if (t >= 118) showResponder();
-      });
-    }
-  });
-
-
-  // Fallback garantido — aparece em 128s desde o carregamento da página
-  setTimeout(showResponder, 128000);
 
   function startQuiz() {
     document.getElementById('phase-1').classList.remove('active');
